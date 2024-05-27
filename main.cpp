@@ -12,83 +12,80 @@ private:
     stack<int> st;
 
 public:
-    int Size() {
+    int Size() { // 2
         return st.size();
     }
 
-    void Push(int x) {
+    void Push(int x) { // 1
         st.push(x);
     }
 
-    int Top() {
+    int Top() { // 2
         return st.top();
     }
 
-    void Pop() {
+    void Pop() { // 1
         st.pop();
     }
 
-    bool isEmpty() {
+    bool isEmpty() { // 2
         return st.empty();
     }
 };
 
 class Numbers : public MyStack {
 public:
-    int Get(int pos) {
-        stack<int> tmp;
+    int Get(int pos) { // 4 + 12n
+        MyStack tmp;
         int ans;
-        for (int i = 0; i != pos; ++i) {
-            tmp.push(Top());
-            Pop();
+        for (int i = 0; i != pos; ++i) { // 2 + ∑_1^n▒〖(1 + 5)〗 = 2 + 6n
+            tmp.Push(Top()); // 4
+            Pop(); // 1
         }
-        ans = Top();
-        while (!tmp.empty()) {
-            Push(tmp.top());
-            tmp.pop();
+        ans = Top(); // 3
+        while (!tmp.isEmpty()) { // 3 + ∑_1^n▒〖(3 + 5)〗  = 3 + 8n
+            Push(tmp.Top()); // 4
+            tmp.Pop(); // 1
         }
-        return ans;
+        return ans; // 1
     }
 
-    void Set(int num, int pos) {
-        stack<int> tmp;
-        for (int i = 0; i < pos; ++i) {
-            tmp.push(Top());
-            Pop();
+    void Set(int num, int pos) { // 8 + 14n
+        MyStack tmp;
+        for (int i = 0; i < pos; ++i) { // 2 + ∑_1^n▒〖(1 + 5)〗 = 2 + 6n
+            tmp.Push(Top()); // 4
+            Pop(); // 1
         }
-        Pop();
-        Push(num);
-        while (!tmp.empty()) {
-            Push(tmp.top());
-            tmp.pop();
+        Pop(); // 1
+        Push(num); // 2
+        while (!tmp.isEmpty()) { // 3 + ∑_1^n▒〖(3 + 5)〗 = 3 + 8n
+            Push(tmp.Top()); // 4
+            tmp.Pop(); // 1
         }
     }
 
 
-    void Swap(int pos1, int pos2) {
-        int temp1 = Get(pos1);
-        int temp2 = Get(pos2);
-        Set(temp1, pos2);
-        Set(temp2, pos1);
+    void Swap(int pos1, int pos2) { // 32 + 52n
+        int temp1 = Get(pos1); // 6 + 12n
+        int temp2 = Get(pos2); // 6 + 12n
+        Set(temp1, pos2); // 10 + 14n
+        Set(temp2, pos1); // 10 + 14n
     }
 
-    void BubbleSort() {
-        int n = Size();
+    void Sort() { // 1 + 4n + 14n^2 + 24n^3
+        int n = Size(); // 3
         bool swapped;
         do {
-            swapped = false;
-            for (int i = 0; i < n - 1; i++) {
-                if (Get(i) > Get(i + 1)) {
-                    Swap(i, i + 1);
-                    swapped = true;
+            swapped = false; // 1
+            for (int i = 0; i < n - 1; i++) { // 3 + ∑_1^n▒〖(2 + 12 + 24n)〗 = 3 + 14n + 24n^2
+                if (Get(i) > Get(i + 1)) { // 5 + 12n + 6 + 12n + 1 = 12 + 24n
+                    Swap(i, i + 1); // 35 + 52n
+                    swapped = true; // 1
                 }
             }
-        } while (swapped);
+        } while (swapped); // 1 + ∑_1^n▒〖(1 + 3 + 14n + 24n^2)〗 = 1 + 4n + 14n^2 + 24n^3
     }
 
-    void Sort() {
-        BubbleSort();
-    }
 };
 
 int main() {
